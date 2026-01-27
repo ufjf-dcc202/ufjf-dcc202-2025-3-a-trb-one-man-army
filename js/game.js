@@ -18,6 +18,7 @@ let grid = [
 
 
 let tile_images = []
+let comandQuery = [];
 let x_start ;
 let y_start ;
 
@@ -50,4 +51,55 @@ function draw_grid() {
 function draw() {
   background("black");
   draw_grid();
+}
+
+const buttons = document.querySelectorAll('.image-button');
+const mainMethod = document.getElementById('main-method')
+
+buttons.forEach(button => {
+    button.addEventListener('click', handleButtonClick);
+});
+
+function handleButtonClick(event) {
+  console.log(event.target);
+  const buttonValue = event.currentTarget.value;
+  console.log("Valor do botão:",buttonValue);
+   comandQuery.push(buttonValue);
+   console.log('Current Array:', comandQuery);
+   updateMainMethod();
+}
+
+function updateMainMethod() {
+    mainMethod.innerHTML = '';
+    comandQuery.forEach((comand, index) => {
+
+        const comandoElement = document.createElement('div');
+        comandoElement.className = 'image-button';
+        const imgElement = document.createElement('img');
+        
+        switch(comand) {
+            case 'frente':
+                imgElement.src = './assets/comandos/arrow_up.png';
+                imgElement.alt = 'avançar';
+                break;
+            case 'direita':
+                imgElement.src = './assets/comandos/arrow_right.png';
+                imgElement.alt = 'virar direita';
+                break;
+            case 'esquerda':
+                imgElement.src = './assets/comandos/arrow_left.png';
+                imgElement.alt = 'virar esquerda';
+                break;
+            case 'pulo':
+                imgElement.src = './assets/comandos/jump.png';
+                imgElement.alt = 'pular';
+                break;
+            case 'acender':
+                imgElement.src = './assets/comandos/lightbulb.png';
+                imgElement.alt = 'acender luz';
+                break;
+        }
+        comandoElement.appendChild(imgElement);
+        mainMethod.appendChild(comandoElement);
+    });
 }
