@@ -1,5 +1,7 @@
 const TILE_WIDTH = 100;
 const TILE_HEIGHT = 50;
+const BOT_WIDTH = 60;
+const BOT_HEIGHT = 80;
 const GRID_SIZE = 10;
 const MAX_TILE_HEIGHT = 80;
 
@@ -21,6 +23,13 @@ let tile_images = []
 let comandQuery = [];
 let x_start ;
 let y_start ;
+let botSprite;
+let bot = {
+  x: 0,  
+  y: 0,  
+  direction: 0,  
+  z: 0   
+};
 
 function draw_tile(img, x, y) {
   let x_screen = x_start + (x - y) * TILE_WIDTH/2;
@@ -35,6 +44,7 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     x_start = width/2 - TILE_WIDTH/2; 
     y_start = 50;
+    botSprite = loadImage("./assets/botty_sample.png")
     for (let i = 0; i <= 34; i++) {
     tile_images.push(loadImage("./tiles/tile-" + i + ".png"));
   }
@@ -47,10 +57,21 @@ function draw_grid() {
     }
   }
 }
+function draw_bot() {
+  let x_screen = x_start + (bot.x - bot.y) * TILE_WIDTH / 2;
+  let y_screen = y_start + (bot.x + bot.y) * TILE_HEIGHT / 2;
+  
+  y_screen -= BOT_HEIGHT - TILE_HEIGHT;
+  
+  y_screen -= bot.z * 10;
+  
+  image(botSprite, x_screen - BOT_WIDTH/2 + TILE_WIDTH/2, y_screen, BOT_WIDTH, BOT_HEIGHT);
+}
 
 function draw() {
   background("black");
   draw_grid();
+  draw_bot();
 }
 
 const buttons = document.querySelectorAll('.image-button');
