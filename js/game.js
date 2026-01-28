@@ -54,7 +54,8 @@ function draw_tile(img, x, y) {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  let canvas = createCanvas(600, 400);
+  canvas.parent('canvas-container');
   x_start = width / 2 - TILE_WIDTH / 2;
   y_start = 50;
   botSprite = loadImage("./assets/botty_sample.png");

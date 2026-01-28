@@ -10,7 +10,23 @@
     width: 100%;
     height: 100%
 }
-.control-container{
+.main-container {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 1rem;
+  justify-content: center;
+  align-items: flex-start;
+}
+.canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  padding: 0.5rem;
+  min-width: 600px;
+}
+.method-container{
     display: flex;
     flex-direction: row;
     gap: 2rem;
@@ -77,4 +93,17 @@
 }
 .play-button:hover {
     opacity: 0.8;
-}    
+}
+canvas {
+  display: block;
+  border-radius: 5px;
+} 
+.control-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.action-buttons{
+    padding-top: 0.5rem ;
+}
