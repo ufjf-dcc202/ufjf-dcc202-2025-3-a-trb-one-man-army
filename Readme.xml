@@ -1,0 +1,41 @@
+# Lightbot - Manual do Jogo
+
+## Como Jogar
+1. Selecione os movimentos clicando nos botões
+2. A sequência vai aparecer na tela ao lado
+3. Clique no botão GO para executar
+4. Se errar, use STOP (🚫) para reiniciar
+
+## Tiles Especiais
+
+### Tile de Areia (Objetivo)
+![Tile de Areia](./tiles/tile_10.png)
+- É o tile que deve ser acendido
+- Fica AZUL quando acendido corretamente
+![Tile de "Aceso"](./tiles/tile_15.png)
+
+### Tile Elevado (Verde)
+![Tile Elevado](./tiles/tile_8.png)
+- Está um nível acima
+- Sobe com PULO
+- Desce com PULO
+- ⚠️ Só pulo frontal disponível
+
+## Comandos
+
+### Movimentos:
+- **Frente**: ![Frente](./assets/comandos/arrow_up.png)
+- **Direita**: ![Direita](./assets/comandos/arrow_right.png)
+- **Esquerda**: ![Esquerda](./assets/comandos/arrow_left.png)
+- **Pulo**: ![Pulo](./assets/comandos/jump.png) (só frontal)
+- **Acender**: ![Acender](./assets/comandos/lightbulb.png)
+
+### Controles:
+- **GO**: ![GO](./assets/comandos/go-6.svg) - Executa a sequência
+- **STOP**: ![STOP](./assets/comandos/sotp_sign.png) - Reinicia a fase
+
+## Dicas
+1. Planeje antes de executar
+2. Tiles verdes precisam de pulo
+3. Só acende no tile de areia
+4. Use STOP para recomeçar rápido
