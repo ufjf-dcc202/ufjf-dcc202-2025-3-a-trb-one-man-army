@@ -2,21 +2,16 @@ const TILE_WIDTH = 100;
 const TILE_HEIGHT = 50;
 const BOT_WIDTH = 60;
 const BOT_HEIGHT = 80;
-const GRID_SIZE = 10;
+const GRID_SIZE = 5;
 const MAX_TILE_HEIGHT = 80;
 
 let grid = [
-  [14, 23, 23, 23, 23, 23, 23, 23, 23, 13],
-  [21, 32, 33, 33, 28, 33, 28, 33, 31, 20],
-  [21, 34,  0,  0, 25, 33, 30,  1, 34, 20],
-  [21, 34,  0,  0, 34,  1,  1, 10, 34, 20],
-  [21, 25, 33, 33, 24, 33, 33, 33, 27, 20],
-  [21, 34,  4,  7, 34, 18, 17, 10, 34, 20],
-  [21, 34,  4,  7, 34, 16, 19, 10, 34, 20],
-  [21, 34,  6,  8, 34, 10, 10, 10, 34, 20],
-  [21, 29, 33, 33, 26, 33, 33, 33, 30, 20],
-  [11, 22, 22, 22, 22, 22, 22, 22, 22, 12]
-];
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1],
+  [1, 1, 10, 1, 1],
+  ];
 
 
 let tile_images = []
@@ -123,4 +118,84 @@ function updateMainMethod() {
         comandoElement.appendChild(imgElement);
         mainMethod.appendChild(comandoElement);
     });
+}
+
+function moveFoward() {
+  let newX = bot.x;
+  let newY = bot.y + 1;  
+  
+  if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE) {
+    bot.x = newX;
+    bot.y = newY;
+  } else {
+    console.log("Movimento inválido: fora dos limites do grid");
+  }
+}
+function moveRight() {
+  let newX = bot.x - 1;
+  let newY = bot.y;
+  
+  if (newX >= GRID_SIZE) {
+    bot.x = newX;
+  } else {
+    console.log("Não pode mover para direita: limite do grid alcançado");
+  }
+}
+
+function moverLeft() {
+  let newX = bot.x + 1;
+  let newY = bot.y;
+  if (newX < GRID_SIZE)
+   {
+    bot.x = newX;
+  } else {
+    console.log("Não pode mover para esquerda: limite do grid alcançado");
+  }
+}
+
+async function playMovements() {
+  const comandsExecution = [...comandQuery];
+  const delayBetweenMovements = 500; 
+  
+  for (let i = 0; i < comandsExecution.length; i++) {
+    const comand = comandsExecution[i];
+    
+    switch(comand) {
+      case 'frente':
+        moveFoward();
+        break;
+      case 'direita':
+        moveRight();
+        break;
+      case 'esquerda':
+        moverLeft();
+        break;
+      case 'pulo':
+        jump();
+        break;
+      case 'acender':
+        switchLight();
+        break;
+      default:
+        console.log(`Comando desconhecido: ${comando}`);
+    }
+    if (i < comandsExecution.length - 1) {
+      await new Promise(resolve => setTimeout(resolve, delayBetweenMovements));
+    }
+  }
+}
+function switchLight () {
+  console.log(bot.x,bot.y)
+  let currentTile = grid [bot.y][bot.x]  
+  console.log(currentTile);
+  if (currentTile===10) {
+    grid[bot.y][bot.x] = 15
+  }
+ }
+
+function stopGame() {
+  bot.x = 0;
+  bot.y = 0;
+  comandQuery = [];
+  mainMethod.innerHTML = ''; 
 }
