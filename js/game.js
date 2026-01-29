@@ -6,6 +6,16 @@ const GRID_SIZE = 5;
 const MAX_TILE_HEIGHT = 80;
 
 
+const MOVE_DURATION = 500;
+const TOTAL_FRAMES = 4;
+
+const FRAME_WIDTH = 63.75;
+const FRAME_HEIGHT = 105.5;
+let currentFrame = 0;
+let directionX = 'left';
+let isAnimating = false;
+
+
 let currentLevel = 0;
 let levels = [
   [
@@ -58,7 +68,7 @@ function setup() {
   canvas.parent('canvas-container');
   x_start = width / 2 - TILE_WIDTH / 2;
   y_start = 50;
-  botSprite = loadImage("./assets/botty_sample.png");
+  botSprite = loadImage("./assets/botty_sheet-removebg-preview-cropped.png");
   
   for (let i = 0; i <= 34; i++) {
     tile_images.push(loadImage("./tiles/tile-" + i + ".png"));
@@ -93,11 +103,24 @@ function draw_grid() {
 function draw_bot() {
   let x_screen = x_start + (bot.x - bot.y) * TILE_WIDTH / 2;
   let y_screen = y_start + (bot.x + bot.y) * TILE_HEIGHT / 2;
-  
+
   y_screen -= BOT_HEIGHT - TILE_HEIGHT;
   y_screen -= bot.z * 10;
-  
-  image(botSprite, x_screen - BOT_WIDTH / 2 + TILE_WIDTH / 2, y_screen, BOT_WIDTH, BOT_HEIGHT);
+
+  const srcX = currentFrame * FRAME_WIDTH;
+  const srcY = directionX === 'right' ? 0 : FRAME_HEIGHT;
+
+  image(
+    botSprite,
+    x_screen - BOT_WIDTH / 2 + TILE_WIDTH / 2,
+    y_screen,
+    BOT_WIDTH,
+    BOT_HEIGHT,
+    srcX,
+    srcY,
+    FRAME_WIDTH,
+    FRAME_HEIGHT
+  );
 }
 
 function draw() {
@@ -153,7 +176,32 @@ function updateMainMethod() {
   });
 }
 
-function moveFoward() {
+function animate(duration = MOVE_DURATION) {
+  return new Promise(resolve => {
+    let startTime = null;
+
+    function animateFrame(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+
+      const frameIndex = Math.floor(progress * TOTAL_FRAMES * 2) % TOTAL_FRAMES;
+      currentFrame = frameIndex;
+
+      if (progress < 1) {
+        requestAnimationFrame(animateFrame);
+      } else {
+        currentFrame = 0;
+        resolve();
+      }
+    }
+
+    requestAnimationFrame(animateFrame);
+  });
+}
+
+async function moveFoward() {
+  let startX = bot.x;
+  let startY = bot.y;
   let newX = bot.x;
   let newY = bot.y + 1;
   
@@ -166,13 +214,37 @@ function moveFoward() {
     if (currentTile === 5 && targetTile !== 5) {
       return;
     }
-    
-    bot.x = newX;
-    bot.y = newY;
+    let startTime = null;
+    await new Promise(resolve => {
+      function animateMove(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / MOVE_DURATION, 1);
+
+        // Interpolar posição
+        bot.x = startX + (newX - startX) * progress;
+        bot.y = startY + (newY - startY) * progress;
+
+        // Atualizar frame do sprite
+        const frameIndex = Math.floor(progress * TOTAL_FRAMES * 2) % TOTAL_FRAMES;
+        currentFrame = frameIndex;
+
+        if (progress < 1) {
+          requestAnimationFrame(animateMove);
+        } else {
+          bot.x = newX;
+          bot.y = newY;
+          currentFrame = 0;
+          resolve();
+        }
+      }
+      requestAnimationFrame(animateMove);
+    })
+          
   }
 }
 
-function moveRight() {
+async function moveRight() {
+  directionX = 'right';
   let newX = bot.x - 1;
   let newY = bot.y;
   
@@ -185,11 +257,35 @@ function moveRight() {
       return;
     }
     
-    bot.x = newX;
+    let startTime = null;
+
+    await new Promise(resolve => {
+      function animateMove(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / MOVE_DURATION, 1);
+
+        bot.x = startX + (newX - startX) * progress;
+        bot.y = startY + (newY - startY) * progress;
+
+        const frameIndex = Math.floor(progress * TOTAL_FRAMES * 2) % TOTAL_FRAMES;
+        currentFrame = frameIndex;
+
+        if (progress < 1) {
+          requestAnimationFrame(animateMove);
+        } else {
+          bot.x = newX;
+          bot.y = newY;
+          currentFrame = 0;
+          resolve();
+        }
+      }
+      requestAnimationFrame(animateMove);
+    });
   }
 }
 
-function moverLeft() {
+async function moverLeft() {
+  directionX= 'left';
   let newX = bot.x + 1;
   let newY = bot.y;
   
@@ -202,7 +298,30 @@ function moverLeft() {
       return;
     }
 
-    bot.x = newX;
+     let startTime = null;
+
+    await new Promise(resolve => {
+      function animateMove(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / MOVE_DURATION, 1);
+
+        bot.x = startX + (newX - startX) * progress;
+        bot.y = startY + (newY - startY) * progress;
+
+        const frameIndex = Math.floor(progress * TOTAL_FRAMES * 2) % TOTAL_FRAMES;
+        currentFrame = frameIndex;
+
+        if (progress < 1) {
+          requestAnimationFrame(animateMove);
+        } else {
+          bot.x = newX;
+          bot.y = newY;
+          currentFrame = 0;
+          resolve();
+        }
+      }
+      requestAnimationFrame(animateMove);
+    })
   }
 }
 
